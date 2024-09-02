@@ -4,10 +4,10 @@
  */
 package controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -31,13 +31,15 @@ public class Upload extends HttpServlet {
         String email = req.getParameter("email");
         System.out.println(email);
 
+        String applicationPath = req.getServletContext().getRealPath("");
+        File newFile = new File(applicationPath + "//files//" + email + ".png");
+
         Part filePart = req.getPart("file");
         InputStream inputStream = filePart.getInputStream();
 
-        String applicationPath = req.getServletContext().getRealPath("//Files");
         Files.copy(
                 inputStream,
-                Path.of(applicationPath, "hello.png"),
+                newFile.toPath(),
                 StandardCopyOption.REPLACE_EXISTING
         );
 
